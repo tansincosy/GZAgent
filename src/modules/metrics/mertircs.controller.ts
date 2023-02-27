@@ -10,7 +10,7 @@ export class MetricsController {
 
   @Get()
   @UseGuards(AuthGuard)
-  @Message('query current agent mertrics info')
+  @Message('query current agent metrics info')
   getMetricsInfo() {
     return this.metricsService.getMetricsInfo();
   }
