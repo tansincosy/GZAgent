@@ -1,0 +1,18 @@
+name: 
+version: 
+port: 3001
+client:
+  id: 
+  secret: 
+log:
+  level: info
+  path: log
+  name: agent
+axios:
+  timeout: 5000
+  maxRedirects: 5
+server:
+  platform: http://127.0.0.1:1000
+secret:
+  password: 
+  salt: 

@@ -1,0 +1,45 @@
+name: "autoDeploy"
+on:
+  push:
+    branches:
+      - releases/**
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: begin to build
+        run: ./scripts/build.sh
+      - name: read software version
+        id: version
+        run: |
+          echo "value=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+      - name: create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.value }}
+          release_name: ${{ steps.version.outputs.value }}
+          draft: false
+          prerelease: false
+      - name: git tar gz file
+        id: find_tar
+        run: |
+          tar_file=$(cat ./tar_file_result.txt)
+          echo "value=$tar_file" >> $GITHUB_OUTPUT
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ steps.find_tar.outputs.value }}
+          asset_name: ${{ steps.find_tar.outputs.value }}
+          asset_content_type: application/gzip
+

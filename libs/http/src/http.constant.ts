@@ -1,0 +1,1 @@
+export const MY_HTTP_PROVIDER = 'MY_HTTP_PROVIDER';
